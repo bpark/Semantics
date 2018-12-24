@@ -1,0 +1,20 @@
+version: '3.0'
+
+services:
+
+  rdf4j:
+    image: yyz1989/rdf4j:2.4.1
+    hostname: rdf4j-server
+    container_name: rdf4j-server
+    ports:
+      - "8080:8080"
+    environment:
+      JAVA_OPTS: "-Xmx3g"
+      RDF4J_DATA: "/data"
+    volumes:
+      - data:/var/rdf4j
+      - logs:/usr/local/tomcat/logs
+
+volumes:
+  data:
+  logs:
