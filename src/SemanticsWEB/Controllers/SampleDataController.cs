@@ -4,28 +4,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SemanticsWEB.Services;
 
 namespace SemanticsWEB.Controllers
 {
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
-        private static string[] Summaries = new[]
+        private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private ILogger<SampleDataController> _logger;
+        private readonly ILogger<SampleDataController> _logger;
+        private readonly IDbPediaQueryService _dbPediaQueryService;
 
-        public SampleDataController(ILogger<SampleDataController> logger)
+        public SampleDataController(ILogger<SampleDataController> logger, 
+            IDbPediaQueryService dbPediaQueryService)
         {
             _logger = logger;
+            _dbPediaQueryService = dbPediaQueryService;
         }
 
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecasts()
         {
             _logger.LogInformation("i was here");
+            //_dbPediaQueryService.doIt();
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
