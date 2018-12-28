@@ -1,8 +1,13 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
+using SemanticsWEB.Extensions;
 using SemanticsWEB.Models;
+using VDS.RDF;
 using VDS.RDF.Query;
 using VDS.RDF.Storage;
+using Graph = SemanticsWEB.Models.Graph;
+using Triple = SemanticsWEB.Models.Triple;
 
 namespace SemanticsWEB.Repositories
 {
@@ -62,6 +67,26 @@ namespace SemanticsWEB.Repositories
             }
 
             return resultList;
+        }
+
+        public Graph QueryGraph()
+        {
+            var nodeDictionary = new Dictionary<string, Node>();
+            var edgeSet = new HashSet<Edge>();
+
+            var nodeCounter = 0;
+            var triples = Query();
+            foreach (var triple in triples)
+            {
+                var subject = triple.Subject;
+                var obj = triple.Object;
+                var subjectNode = nodeDictionary.ComputeIfAbsent(subject, key => new Node(nodeCounter++, subject));
+                var objectNode = nodeDictionary.ComputeIfAbsent(obj, key => new Node(nodeCounter++, obj));
+
+                edgeSet.Add(new Edge(subjectNode.Id, objectNode.Id, triple.Predicate));
+            }
+            
+            return new Graph(nodeDictionary.Values, edgeSet);
         }
     }
 }

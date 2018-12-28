@@ -6,5 +6,7 @@ namespace SemanticsWEB.Repositories
     public interface ISesameRepository
     {
         IEnumerable<Triple> Query();
+
+        Graph QueryGraph();
     }
 }

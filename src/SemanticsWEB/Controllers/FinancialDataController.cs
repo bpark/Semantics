@@ -21,7 +21,7 @@ namespace SemanticsWEB.Controllers
         public IActionResult QueryCurrencies()
         {
             _logger.LogInformation("i was here");
-            return Ok(_sesameRepository.Query());
+            return Ok(_sesameRepository.QueryGraph());
         }
     }
 }
