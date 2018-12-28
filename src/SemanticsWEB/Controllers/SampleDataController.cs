@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SemanticsWEB.Services;
+using SemanticsWEB.Repositories;
 
 namespace SemanticsWEB.Controllers
 {
@@ -17,13 +17,13 @@ namespace SemanticsWEB.Controllers
         };
 
         private readonly ILogger<SampleDataController> _logger;
-        private readonly IDbPediaQueryService _dbPediaQueryService;
+        private readonly IDbPediaRepository _dbPediaRepository;
 
         public SampleDataController(ILogger<SampleDataController> logger, 
-            IDbPediaQueryService dbPediaQueryService)
+            IDbPediaRepository dbPediaRepository)
         {
             _logger = logger;
-            _dbPediaQueryService = dbPediaQueryService;
+            _dbPediaRepository = dbPediaRepository;
         }
 
         [HttpGet("[action]")]

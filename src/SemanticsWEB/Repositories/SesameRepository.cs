@@ -1,21 +1,20 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using SemanticsWEB.Models;
 using VDS.RDF.Query;
 using VDS.RDF.Storage;
 
-namespace SemanticsWEB.Services
+namespace SemanticsWEB.Repositories
 {
-    public class RdfQueryService : IRdfQueryService
+    public class SesameRepository : ISesameRepository
     {
         private const string Rdf4jEndpoint = "http://192.168.33.10:8080/rdf4j-server/";
 
         private const string RepositoryId = "financials";
 
-        private readonly ILogger<RdfQueryService> _logger;
+        private readonly ILogger<SesameRepository> _logger;
 
-        public RdfQueryService(ILogger<RdfQueryService> logger)
+        public SesameRepository(ILogger<SesameRepository> logger)
         {
             _logger = logger;
         }

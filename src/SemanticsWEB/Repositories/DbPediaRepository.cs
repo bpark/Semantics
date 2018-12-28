@@ -2,9 +2,9 @@ using System;
 using Microsoft.Extensions.Logging;
 using VDS.RDF.Query;
 
-namespace SemanticsWEB.Services
+namespace SemanticsWEB.Repositories
 {
-    public class DbPediaQueryService : IDbPediaQueryService
+    public class DbPediaRepository : IDbPediaRepository
     {
         private static readonly string DbPediaEndpoint = "http://dbpedia.org/sparql";
 
@@ -24,9 +24,9 @@ namespace SemanticsWEB.Services
             "PREFIX ont: <http://dbpedia.org/ontology/>"
         }; 
         
-        private readonly ILogger<DbPediaQueryService> _logger;
+        private readonly ILogger<DbPediaRepository> _logger;
 
-        public DbPediaQueryService(ILogger<DbPediaQueryService> logger)
+        public DbPediaRepository(ILogger<DbPediaRepository> logger)
         {
             _logger = logger;
         }

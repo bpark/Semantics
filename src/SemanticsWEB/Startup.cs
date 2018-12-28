@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SemanticsWEB.Services;
+using SemanticsWEB.Repositories;
 using Serilog;
 
 namespace SemanticsWEB
@@ -27,8 +27,8 @@ namespace SemanticsWEB
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
-            services.AddTransient<IDbPediaQueryService, DbPediaQueryService>();
-            services.AddTransient<IRdfQueryService, RdfQueryService>();
+            services.AddTransient<IDbPediaRepository, DbPediaRepository>();
+            services.AddTransient<ISesameRepository, SesameRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

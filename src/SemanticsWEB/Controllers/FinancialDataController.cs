@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SemanticsWEB.Services;
+using SemanticsWEB.Repositories;
 
 namespace SemanticsWEB.Controllers
 {
@@ -9,19 +9,19 @@ namespace SemanticsWEB.Controllers
     {
 
         private readonly ILogger<FinancialDataController> _logger;
-        private readonly IRdfQueryService _rdfQueryService;
+        private readonly ISesameRepository _sesameRepository;
 
-        public FinancialDataController(ILogger<FinancialDataController> logger, IRdfQueryService rdfQueryService)
+        public FinancialDataController(ILogger<FinancialDataController> logger, ISesameRepository sesameRepository)
         {
             _logger = logger;
-            _rdfQueryService = rdfQueryService;
+            _sesameRepository = sesameRepository;
         }
         
         [HttpGet()]
         public IActionResult QueryCurrencies()
         {
             _logger.LogInformation("i was here");
-            return Ok(_rdfQueryService.Query());
+            return Ok(_sesameRepository.Query());
         }
     }
 }

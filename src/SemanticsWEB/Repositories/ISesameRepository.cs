@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using SemanticsWEB.Models;
 
-namespace SemanticsWEB.Services
+namespace SemanticsWEB.Repositories
 {
-    public interface IRdfQueryService
+    public interface ISesameRepository
     {
         IEnumerable<Triple> Query();
     }
