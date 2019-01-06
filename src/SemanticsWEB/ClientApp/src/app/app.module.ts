@@ -9,6 +9,9 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import {GraphVisDirective} from "./graph/graph-vis.directive";
+import {RdfDataService} from "./graph/rdf-data.service";
+import {RdfGraphComponent} from "./graph/rdf-graph/rdf-graph.component";
 
 @NgModule({
   declarations: [
@@ -16,7 +19,9 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
-    FetchDataComponent
+    FetchDataComponent,
+    GraphVisDirective,
+    RdfGraphComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -26,9 +31,12 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'graph', component: GraphVisDirective },
     ])
   ],
-  providers: [],
+  providers: [
+    RdfDataService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
