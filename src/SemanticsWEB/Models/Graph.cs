@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VDS.RDF;
 
 namespace SemanticsWEB.Models
 {
@@ -11,15 +12,19 @@ namespace SemanticsWEB.Models
         /// Constructs a new RDF Node.
         /// </summary>
         /// <param name="id">The Id of the Node</param>
+        /// <param name="nodeType">The node type</param>
         /// <param name="label">The label</param>
-        public Node(int id, string label)
+        public Node(int id, NodeType nodeType, string label)
         {
             Id = id;
+            NodeType = nodeType;
             Label = label;
         }
 
         public int Id { get; }
         public string Label { get; }
+        
+        public NodeType NodeType { get; }
     }
 
     /// <summary>
