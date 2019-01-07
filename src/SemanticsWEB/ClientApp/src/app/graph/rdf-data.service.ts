@@ -15,6 +15,6 @@ export class RdfDataService {
   }
 
   private static createConnectionUrl(): string {
-    return 'https://localhost:5001/api/financial';
+    return 'https://localhost:5001/api/financial/resource?nodeType=Uri&resource=permid:1-1003939166';
   }
 }

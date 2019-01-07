@@ -15,12 +15,21 @@ namespace SemanticsWEB.Repositories
 {
     public class SesameRepository : ISesameRepository
     {
+        /// <summary>
+        /// The rdf4j server data endpoint.
+        /// </summary>
         private const string Rdf4JEndpoint = "http://192.168.33.10:8080/rdf4j-server/";
 
+        /// <summary>
+        /// The repository to query.
+        /// </summary>
         private const string RepositoryId = "infcurr";
 
         private readonly ILogger<SesameRepository> _logger;
 
+        /// <summary>
+        /// List of used sparql prefixes. URI parts are replaced by the prefixes.
+        /// </summary>
         private static readonly Dictionary<string, string> Prefixes = new Dictionary<string, string>()
         {
             {"tr-common", "http://permid.org/ontology/common/"},
@@ -42,8 +51,7 @@ namespace SemanticsWEB.Repositories
         
         public IEnumerable<Triple> Query()
         {
-
-            var results = QuerySparql();
+            var results = QuerySparql(NodeType.Uri, "permid:1-1003939166");
             
             var resultList = new List<Triple>(); 
             
@@ -64,9 +72,9 @@ namespace SemanticsWEB.Repositories
             return resultList;
         }
 
-        public Graph QueryGraph()
+        public Graph QueryResource(NodeType nodeType, string resource)
         {
-            var results = QuerySparql();
+            var results = QuerySparql(nodeType, resource);
             
             var nodeDictionary = new Dictionary<string, Node>();
             var edgeSet = new HashSet<Edge>();
@@ -96,22 +104,33 @@ namespace SemanticsWEB.Repositories
             return key => new Node(nodeCounter, nodeType, namespaceString);
         }
 
-        private static string CreateNamespaceString(string valueString)
+        private static string CreateNamespaceString(string uriString)
         {
-            var literalValue = valueString;
+            var namespaceString = uriString;
             foreach(var (key, value) in Prefixes)
             {
-                literalValue = literalValue.Replace(value, key + ":");
+                namespaceString = namespaceString.Replace(value, key + ":");
             }
             
-            return literalValue;
+            return namespaceString;
         }
 
-        private SparqlResultSet QuerySparql()
+        private static string CreateUriString(string namespaceString)
+        {
+            var uriString = namespaceString;
+            foreach(var (key, value) in Prefixes)
+            {
+                uriString = uriString.Replace(key + ":", value);
+            }
+            
+            return uriString;
+        }
+
+        private SparqlResultSet QuerySparql(NodeType nodeType, string resource)
         {
             _logger.LogInformation("query rdf financial store");
 
-            var query = CreateQuery();
+            var query = CreateQuery(nodeType, resource);
             
             _logger.LogInformation("query: {@query}", query);
             
@@ -124,12 +143,10 @@ namespace SemanticsWEB.Repositories
             return results;
         }
 
-        private static string CreateQuery()
+        private static string CreateQuery(NodeType nodeType, string resource)
         {
-            //Create a Parameterized String
             var queryString = new SparqlParameterizedString();
 
-            //Add a namespace declaration
             foreach(var (key, value) in Prefixes)
             {
                 queryString.Namespaces.AddNamespace(key, new Uri(value));
@@ -137,14 +154,21 @@ namespace SemanticsWEB.Repositories
 
             queryString.CommandText = "SELECT ?subject ?predicate ?object\n" +
                                       "WHERE {\n" +
-                                      "BIND(@permid AS ?subject) .\n" +
-                                      "@permid ?predicate ?object" +
+                                      "?subject ?predicate ?object\n" +
+                                      "FILTER (?subject = @permid || ?predicate = @permid || ?object = @permid)\n" +
                                       "}\n" +
                                       "LIMIT 50";
-
-            //queryString.SetUri("permid", new Uri("https://permid.org/1-1000285985"));
-            queryString.SetUri("permid", new Uri("https://permid.org/1-1003939166"));
-
+            
+            if (nodeType == NodeType.Uri)
+            {
+                var uriString = CreateUriString(resource);
+                queryString.SetUri("permid", new Uri(uriString));                     
+            }
+            else
+            {
+                queryString.SetLiteral("permid", resource);
+            }
+            
             return queryString.ToString();
         }
 

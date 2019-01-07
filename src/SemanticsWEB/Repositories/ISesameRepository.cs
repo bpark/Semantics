@@ -1,5 +1,7 @@
 using System.Collections.Generic;
-using SemanticsWEB.Models;
+using VDS.RDF;
+using Graph = SemanticsWEB.Models.Graph;
+using Triple = SemanticsWEB.Models.Triple;
 
 namespace SemanticsWEB.Repositories
 {
@@ -10,6 +12,6 @@ namespace SemanticsWEB.Repositories
     {
         IEnumerable<Triple> Query();
 
-        Graph QueryGraph();
+        Graph QueryResource(NodeType nodeType, string resource);
     }
 }

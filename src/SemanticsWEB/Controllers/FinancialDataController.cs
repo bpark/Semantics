@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SemanticsWEB.Repositories;
+using VDS.RDF;
 
 namespace SemanticsWEB.Controllers
 {
@@ -21,7 +22,14 @@ namespace SemanticsWEB.Controllers
         public IActionResult QueryCurrencies()
         {
             _logger.LogInformation("i was here");
-            return Ok(_sesameRepository.QueryGraph());
+            return Ok(_sesameRepository.QueryResource(NodeType.Uri, "permid:1-1003939166"));
+        }
+
+        [HttpGet("resource")]
+        public IActionResult QueryResource(NodeType nodeType, string resource)
+        {
+            _logger.LogInformation("querying resource {@nodeType}/{@resource}", nodeType, resource);
+            return Ok(_sesameRepository.QueryResource(nodeType, resource));
         }
     }
 }
