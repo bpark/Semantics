@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RdfDataService} from "../rdf-data.service";
-import { DataSet } from 'vis';
+import {DataSet} from 'vis';
+import {VisNode} from "../data-model";
 
 @Component({
   selector: 'app-rdf-graph',
@@ -19,8 +20,23 @@ export class RdfGraphComponent implements OnInit {
     this.rdfDataService.get().subscribe(result => {
       // provide the data in the vis format
       console.log(result);
+      const visNodes: VisNode[] = result.nodes.map(node => {
+        let color = undefined;
+        if (node.nodeType != 'Uri') {
+          color = {background: '#FF8800', border: '#FF8800'};
+        } else {
+          // #2387b7
+          color = {background: '#2A9FD6', border: '#2A9FD6'};
+        }
+        return {
+          id: node.id,
+          label: node.label,
+          nodeType: node.nodeType,
+          color: color
+        };
+      });
       this.graphData = {};
-      this.graphData["nodes"] = new DataSet(result.nodes);
+      this.graphData["nodes"] = new DataSet(visNodes);
       this.graphData["edges"] = new DataSet(result.edges);
     });
   }

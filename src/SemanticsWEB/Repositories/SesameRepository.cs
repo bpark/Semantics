@@ -23,7 +23,8 @@ namespace SemanticsWEB.Repositories
         /// <summary>
         /// The repository to query.
         /// </summary>
-        private const string RepositoryId = "infcurr";
+        private const string RepositoryId = "currencies";
+        //private const string RepositoryId = "infcurr";
 
         private readonly ILogger<SesameRepository> _logger;
 

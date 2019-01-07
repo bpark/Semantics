@@ -18,8 +18,12 @@ export class GraphVisDirective {
       edges: {
         smooth: {
           forceDirection: "none"
-        }
+        },
         //font: {align: 'top'}
+        font: {
+          color: '#eeeeee',
+          strokeWidth: 0
+        }
       },
       physics: {
         barnesHut: {
@@ -30,6 +34,9 @@ export class GraphVisDirective {
       },
       nodes: {
         shape: 'dot',
+        font: {
+          color: '#eeeeee'
+        }
         /*scaling: {
           label: {
             min: 8,
