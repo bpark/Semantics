@@ -9,9 +9,8 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import {GraphVisDirective} from "./graph/graph-vis.directive";
-import {RdfDataService} from "./graph/rdf-data.service";
-import {RdfGraphComponent} from "./graph/rdf-graph/rdf-graph.component";
+import { RdfDataService } from "./graph/rdf-data.service";
+import { RdfGraphComponent } from "./graph/rdf-graph/rdf-graph.component";
 
 @NgModule({
   declarations: [
@@ -20,7 +19,6 @@ import {RdfGraphComponent} from "./graph/rdf-graph/rdf-graph.component";
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    GraphVisDirective,
     RdfGraphComponent
   ],
   imports: [
@@ -31,7 +29,7 @@ import {RdfGraphComponent} from "./graph/rdf-graph/rdf-graph.component";
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'graph', component: GraphVisDirective },
+      { path: 'graph', component: RdfGraphComponent },
     ])
   ],
   providers: [

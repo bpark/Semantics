@@ -10,11 +10,11 @@ export class RdfDataService {
 
   constructor(private http: HttpClient) { }
 
-  get(): Observable<DataModel> {
-    return this.http.get<DataModel>(RdfDataService.createConnectionUrl());
+  get(nodeType: string, resource: string): Observable<DataModel> {
+    return this.http.get<DataModel>(RdfDataService.createConnectionUrl(nodeType, resource));
   }
 
-  private static createConnectionUrl(): string {
-    return 'https://localhost:5001/api/financial/resource?nodeType=Uri&resource=permid:1-1003939166';
+  private static createConnectionUrl(nodeType: string, resource: string): string {
+    return 'https://localhost:5001/api/financial/resource?nodeType='+nodeType+'&resource=' + resource;
   }
 }
