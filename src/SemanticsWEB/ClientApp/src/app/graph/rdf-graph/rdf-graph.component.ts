@@ -1,8 +1,8 @@
-import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {RdfDataService} from "../rdf-data.service";
-import {DataSet, Network, Options, Data, Node, Edge} from 'vis';
+import {Data, DataSet, Edge, Network, Node, Options} from 'vis';
 import {VisNode} from "../data-model";
-import { Observable, Subject } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-rdf-graph',
@@ -44,9 +44,9 @@ export class RdfGraphComponent implements OnInit {
           let nodeData = gData['nodes'] as DataSet<Node>;
           nodeData.forEach(node => {
             if (node.id === selectedId) {
-              let visNode = node as VisNode;;
+              let visNode = node as VisNode;
               subject.next(visNode);
-              subject.complete();
+              //subject.complete();
             }
           });
         });
@@ -68,7 +68,10 @@ export class RdfGraphComponent implements OnInit {
     this.rdfDataService.get(nodeType, resource).subscribe(result => {
       console.log(result);
 
-      const visNodes: VisNode[] = result.nodes.map(node => {
+      let nodeData = this.graphData["nodes"] as DataSet<Node>;
+      let edgeData = this.graphData["edges"] as DataSet<Edge>;
+
+      const visNodes: VisNode[] = result.nodes.filter(node => nodeData.get(node.id) == null).map(node => {
         let color;
         if (node.nodeType != 'Uri') {
           color = {background: '#FF8800', border: '#FF8800'};
@@ -83,18 +86,17 @@ export class RdfGraphComponent implements OnInit {
         };
       });
 
-      let nodeData = this.graphData["nodes"] as DataSet<Node>;
-      let edgeData = this.graphData["edges"] as DataSet<Edge>;
-      nodeData.add(visNodes);
-      edgeData.add(result.edges);
+      console.log(edgeData.get([result.edges[0].from, result.edges[0].to]).filter(r => r != null));
 
-      //this.graphData["nodes"] = new DataSet(visNodes);
-      //this.graphData["edges"] = new DataSet(result.edges);
+      const edges = result.edges.filter(edge => edgeData.get([edge.from, edge.to]).filter(r => r != null).length == 0);
+
+      nodeData.add(visNodes);
+      edgeData.add(edges);
     });
   }
 
   private createOptions(): Options {
-    const options = {
+    return {
       edges: {
         //smooth: {
         //  forceDirection: "none"
@@ -127,8 +129,6 @@ export class RdfGraphComponent implements OnInit {
       width: (window.innerWidth - 0) + "px",
       height: (window.innerHeight - 0) + "px"
     };
-
-    return options;
   }
 
 }

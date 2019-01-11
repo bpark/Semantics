@@ -74,5 +74,5 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", privileged: true, path: "configs/install.sh"
   config.vm.provision "shell", privileged: true, path: "configs/start.sh", run: "always"
 
-  config.vm.synced_folder '../', '/var/workspace/', type: "rsync"
+  config.vm.synced_folder './configs', '/var/workspace/Semantics', type: "rsync"
 end

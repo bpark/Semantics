@@ -14,14 +14,14 @@ namespace SemanticsWEB.Models
         /// <param name="id">The Id of the Node</param>
         /// <param name="nodeType">The node type</param>
         /// <param name="label">The label</param>
-        public Node(int id, NodeType nodeType, string label)
+        public Node(string id, NodeType nodeType, string label)
         {
             Id = id;
             NodeType = nodeType;
             Label = label;
         }
 
-        public int Id { get; }
+        public string Id { get; }
         public string Label { get; }
         
         public NodeType NodeType { get; }
@@ -38,15 +38,15 @@ namespace SemanticsWEB.Models
         /// <param name="from">The Id of the Node of the Subject Node</param>
         /// <param name="to">The id of the Node of the Object Node</param>
         /// <param name="label">The name of the Edge</param>
-        public Edge(int from, int to, string label)
+        public Edge(string from, string to, string label)
         {
             From = from;
             To = to;
             Label = label;
         }
 
-        public int From { get; }
-        public int To { get; }
+        public string From { get; }
+        public string To { get; }
         public string Label { get; }
     }
     

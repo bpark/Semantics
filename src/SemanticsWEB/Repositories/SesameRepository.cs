@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
+using HashLib;
 using Microsoft.Extensions.Logging;
 using SemanticsWEB.Extensions;
 using SemanticsWEB.Models;
@@ -25,6 +27,8 @@ namespace SemanticsWEB.Repositories
         /// </summary>
         private const string RepositoryId = "currencies";
         //private const string RepositoryId = "infcurr";
+
+        private static readonly IHash hash = HashFactory.Hash64.CreateMurmur2();
 
         private readonly ILogger<SesameRepository> _logger;
 
@@ -80,7 +84,6 @@ namespace SemanticsWEB.Repositories
             var nodeDictionary = new Dictionary<string, Node>();
             var edgeSet = new HashSet<Edge>();
 
-            var nodeCounter = 0;
             foreach (var result in results)
             {
 
@@ -88,8 +91,8 @@ namespace SemanticsWEB.Repositories
                 var predicateValue = GetResultValue(result, "predicate");
                 var objectValue = GetResultValue(result, "object");
                 
-                var subjectNode = nodeDictionary.ComputeIfAbsent(subjectValue, CreateNodeFunc(subjectValue, nodeCounter++));
-                var objectNode = nodeDictionary.ComputeIfAbsent(objectValue, CreateNodeFunc(objectValue, nodeCounter++));
+                var subjectNode = nodeDictionary.ComputeIfAbsent(subjectValue, CreateNodeFunc(subjectValue));
+                var objectNode = nodeDictionary.ComputeIfAbsent(objectValue, CreateNodeFunc(objectValue));
 
                 edgeSet.Add(new Edge(subjectNode.Id, objectNode.Id, CreateNamespaceString(predicateValue)));
             }
@@ -97,12 +100,13 @@ namespace SemanticsWEB.Repositories
             return new Graph(nodeDictionary.Values, edgeSet);
         }
 
-        private static Func<string, Node> CreateNodeFunc(string value, int nodeCounter)
+        private static Func<string, Node> CreateNodeFunc(string value)
         {
             var nodeType = EvaluateNodeType(value);
             var namespaceString = CreateNamespaceString(value);
+            var id = hash.ComputeString(value, Encoding.ASCII).ToString();
             
-            return key => new Node(nodeCounter, nodeType, namespaceString);
+            return key => new Node(id, nodeType, namespaceString);
         }
 
         private static string CreateNamespaceString(string uriString)
