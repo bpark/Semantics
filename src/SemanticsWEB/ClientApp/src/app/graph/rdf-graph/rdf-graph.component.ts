@@ -88,7 +88,7 @@ export class RdfGraphComponent implements OnInit {
 
       console.log(edgeData.get([result.edges[0].from, result.edges[0].to]).filter(r => r != null));
 
-      const edges = result.edges.filter(edge => edgeData.get([edge.from, edge.to]).filter(r => r != null).length == 0);
+      const edges = result.edges.filter(edge => edgeData.get(edge.id) == null);
 
       nodeData.add(visNodes);
       edgeData.add(edges);

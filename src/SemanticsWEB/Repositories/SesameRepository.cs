@@ -94,7 +94,9 @@ namespace SemanticsWEB.Repositories
                 var subjectNode = nodeDictionary.ComputeIfAbsent(subjectValue, CreateNodeFunc(subjectValue));
                 var objectNode = nodeDictionary.ComputeIfAbsent(objectValue, CreateNodeFunc(objectValue));
 
-                edgeSet.Add(new Edge(subjectNode.Id, objectNode.Id, CreateNamespaceString(predicateValue)));
+                var toHash = subjectNode.Id + "/" + objectNode.Id;
+                var id = hash.ComputeString(toHash, Encoding.ASCII).ToString();
+                edgeSet.Add(new Edge(id, subjectNode.Id, objectNode.Id, CreateNamespaceString(predicateValue)));
             }
             
             return new Graph(nodeDictionary.Values, edgeSet);

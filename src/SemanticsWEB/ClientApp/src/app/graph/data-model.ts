@@ -14,7 +14,8 @@ export interface Node {
 export interface Edge {
   from: string,
   to: string,
-  label: string
+  label: string,
+  id: string
 }
 
 export interface VisNode extends Node {

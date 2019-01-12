@@ -35,16 +35,19 @@ namespace SemanticsWEB.Models
         /// <summary>
         /// Constructs a new directed Edge.
         /// </summary>
+        /// <param name="id">the Edge Id</param>
         /// <param name="from">The Id of the Node of the Subject Node</param>
         /// <param name="to">The id of the Node of the Object Node</param>
         /// <param name="label">The name of the Edge</param>
-        public Edge(string from, string to, string label)
+        public Edge(string id, string from, string to, string label)
         {
+            Id = id;
             From = from;
             To = to;
             Label = label;
         }
 
+        public string Id { get; }
         public string From { get; }
         public string To { get; }
         public string Label { get; }
