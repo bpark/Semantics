@@ -23,4 +23,5 @@ export interface VisNode extends Node {
   label: string;
   nodeType: string;
   color: any;
+  value: number;
 }

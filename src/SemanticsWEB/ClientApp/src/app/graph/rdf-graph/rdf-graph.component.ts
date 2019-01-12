@@ -82,7 +82,8 @@ export class RdfGraphComponent implements OnInit {
           id: node.id,
           label: node.label,
           nodeType: node.nodeType,
-          color: color
+          color: color,
+          value: 1
         };
       });
 
@@ -92,6 +93,8 @@ export class RdfGraphComponent implements OnInit {
 
       nodeData.add(visNodes);
       edgeData.add(edges);
+
+      this.weightNodes();
     });
   }
 
@@ -129,6 +132,31 @@ export class RdfGraphComponent implements OnInit {
       width: (window.innerWidth - 0) + "px",
       height: (window.innerHeight - 0) + "px"
     };
+  }
+
+  private weightNodes(): void {
+
+    let nodeData = this.graphData["nodes"] as DataSet<Node>;
+    let edgeData = this.graphData["edges"] as DataSet<Edge>;
+
+    nodeData.forEach(node => {
+      node.value = 0;
+    });
+
+    edgeData.forEach(edge => {
+      const nodeFrom = nodeData.get(edge.from);
+      if (nodeFrom != null) {
+        nodeFrom.value++;
+        nodeData.update(nodeFrom);
+      }
+      const nodeTo = nodeData.get(edge.to);
+      if (nodeTo != null) {
+        nodeTo.value++;
+        nodeData.update(nodeTo);
+      }
+
+    });
+
   }
 
 }
