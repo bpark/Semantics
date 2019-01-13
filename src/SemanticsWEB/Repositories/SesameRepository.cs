@@ -26,9 +26,11 @@ namespace SemanticsWEB.Repositories
         /// The repository to query.
         /// </summary>
         private const string RepositoryId = "currencies";
-        //private const string RepositoryId = "infcurr";
 
-        private static readonly IHash hash = HashFactory.Hash64.CreateMurmur2();
+        /// <summary>
+        /// The hash function used to create Id's.
+        /// </summary>
+        private static readonly IHash Hash = HashFactory.Hash64.CreateMurmur2();
 
         private readonly ILogger<SesameRepository> _logger;
 
@@ -48,33 +50,21 @@ namespace SemanticsWEB.Repositories
             {"owl", "http://www.w3.org/2002/07/owl#"},
             {"permid", "https://permid.org/"}
         };
+        
+        /// <summary>
+        /// The sparql query used to query rdf statements.
+        /// </summary>
+        private static readonly string SparqlQuery = 
+            @"SELECT ?subject ?predicate ?object
+              WHERE {
+                 ?subject ?predicate ?object
+                 FILTER (?subject = @value || ?predicate = @value || ?object = @value)
+              }
+              LIMIT 50";
 
         public SesameRepository(ILogger<SesameRepository> logger)
         {
             _logger = logger;
-        }
-        
-        public IEnumerable<Triple> Query()
-        {
-            var results = QuerySparql(NodeType.Uri, "permid:1-1003939166");
-            
-            var resultList = new List<Triple>(); 
-            
-            _logger.LogInformation("queried entries: " + results.Count);
-            
-            foreach (var result in results)
-            {
-                
-                resultList.Add(new Triple()
-                {
-                    Subject = GetResultValue(result, "subject"),
-                    Predicate = GetResultValue(result, "predicate"),
-                    Object = GetResultValue(result, "object")
-                });
-                
-            }
-
-            return resultList;
         }
 
         public Graph QueryResource(NodeType nodeType, string resource)
@@ -95,7 +85,7 @@ namespace SemanticsWEB.Repositories
                 var objectNode = nodeDictionary.ComputeIfAbsent(objectValue, CreateNodeFunc(objectValue));
 
                 var toHash = subjectNode.Id + "/" + objectNode.Id;
-                var id = hash.ComputeString(toHash, Encoding.ASCII).ToString();
+                var id = Hash.ComputeString(toHash, Encoding.ASCII).ToString();
                 edgeSet.Add(new Edge(id, subjectNode.Id, objectNode.Id, CreateNamespaceString(predicateValue)));
             }
             
@@ -106,7 +96,7 @@ namespace SemanticsWEB.Repositories
         {
             var nodeType = EvaluateNodeType(value);
             var namespaceString = CreateNamespaceString(value);
-            var id = hash.ComputeString(value, Encoding.ASCII).ToString();
+            var id = Hash.ComputeString(value, Encoding.ASCII).ToString();
             
             return key => new Node(id, nodeType, namespaceString);
         }
@@ -159,21 +149,16 @@ namespace SemanticsWEB.Repositories
                 queryString.Namespaces.AddNamespace(key, new Uri(value));
             }
 
-            queryString.CommandText = "SELECT ?subject ?predicate ?object\n" +
-                                      "WHERE {\n" +
-                                      "?subject ?predicate ?object\n" +
-                                      "FILTER (?subject = @permid || ?predicate = @permid || ?object = @permid)\n" +
-                                      "}\n" +
-                                      "LIMIT 50";
+            queryString.CommandText = SparqlQuery;
             
             if (nodeType == NodeType.Uri)
             {
                 var uriString = CreateUriString(resource);
-                queryString.SetUri("permid", new Uri(uriString));                     
+                queryString.SetUri("value", new Uri(uriString));                     
             }
             else
             {
-                queryString.SetLiteral("permid", resource);
+                queryString.SetLiteral("value", resource);
             }
             
             return queryString.ToString();

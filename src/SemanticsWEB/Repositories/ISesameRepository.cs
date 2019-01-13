@@ -10,8 +10,12 @@ namespace SemanticsWEB.Repositories
     /// </summary>
     public interface ISesameRepository
     {
-        IEnumerable<Triple> Query();
-
+        /// <summary>
+        /// Queries a specific resource by NodeType and name.
+        /// </summary>
+        /// <param name="nodeType">The NodeType, either Uri or Literal</param>
+        /// <param name="resource">The resource name, maybe namespaced in case of NodeType</param>
+        /// <returns>The resulting Graph</returns>
         Graph QueryResource(NodeType nodeType, string resource);
     }
 }
