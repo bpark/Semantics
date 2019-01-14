@@ -55,6 +55,11 @@ namespace SemanticsWEB.Models
     
     public class Graph
     {
+        /// <summary>
+        /// Data structure to represent a graph. 
+        /// </summary>
+        /// <param name="nodes">Nodes of the graph.</param>
+        /// <param name="edges">edges of the graph.</param>
         public Graph(IEnumerable<Node> nodes, IEnumerable<Edge> edges)
         {
             Nodes = nodes;
