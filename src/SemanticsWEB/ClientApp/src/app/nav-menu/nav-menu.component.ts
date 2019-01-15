@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {RdfDataService} from "../graph/rdf-data.service";
 
 @Component({
   selector: 'app-nav-menu',
@@ -6,13 +7,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent {
-  isExpanded = false;
 
-  collapse() {
-    this.isExpanded = false;
+  searchText: string;
+
+  constructor(private rdfDataService: RdfDataService) {
+
   }
 
-  toggle() {
-    this.isExpanded = !this.isExpanded;
+  onSubmit() {
+    console.log('searchText: ', this.searchText);
   }
 }
