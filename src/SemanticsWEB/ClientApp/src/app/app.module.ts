@@ -11,6 +11,7 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { RdfDataService } from "./graph/rdf-data.service";
 import { RdfGraphComponent } from "./graph/rdf-graph/rdf-graph.component";
+import {GraphDataStateService} from "./graph/graph-data-state.service";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { RdfGraphComponent } from "./graph/rdf-graph/rdf-graph.component";
     ])
   ],
   providers: [
-    RdfDataService
+    RdfDataService,
+    GraphDataStateService
   ],
   bootstrap: [AppComponent]
 })

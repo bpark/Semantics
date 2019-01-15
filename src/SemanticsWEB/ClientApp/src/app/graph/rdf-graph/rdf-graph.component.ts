@@ -1,8 +1,8 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {RdfDataService} from "../rdf-data.service";
 import {Data, DataSet, Edge, Network, Node, Options} from 'vis';
 import {VisNode} from "../data-model";
 import {Observable, Subject} from 'rxjs';
+import {GraphDataStateService} from "../graph-data-state.service";
 
 @Component({
   selector: 'app-rdf-graph',
@@ -20,7 +20,7 @@ export class RdfGraphComponent implements OnInit {
   graphData: Data;
   network: Network;
 
-  constructor(private rdfDataService: RdfDataService) {}
+  constructor(private graphDataStateService: GraphDataStateService) {}
 
   ngOnInit(): void {
 
@@ -28,7 +28,18 @@ export class RdfGraphComponent implements OnInit {
     this.graphData["nodes"] = new DataSet();
     this.graphData["edges"] = new DataSet();
 
-    this.queryData('Uri', 'permid:1-1003939166');
+    this.graphDataStateService.graphData$.subscribe(graphData => {
+      let nodeData = this.graphData["nodes"] as DataSet<Node>;
+      let edgeData = this.graphData["edges"] as DataSet<Edge>;
+
+      let newNodeData = graphData["nodes"] as DataSet<Node>;
+      let newEdgeData = graphData["edges"] as DataSet<Edge>;
+
+      nodeData.update(newNodeData.get());
+      edgeData.update(newEdgeData.get());
+    });
+
+    this.graphDataStateService.queryData('Uri', 'permid:1-1003939166');
   }
 
   private createNetwork(networkElementRef: ElementRef): void {
@@ -52,50 +63,11 @@ export class RdfGraphComponent implements OnInit {
         });
       }).subscribe(result => {
         console.log(result);
-        this.queryData(result.nodeType, result.label);
+        this.graphDataStateService.queryData(result.nodeType, result.label);
       });
 
 
     }
-  }
-
-  private onNetworkClick(node: VisNode): void {
-    console.log(node);
-    this.queryData(node.nodeType, node.label);
-  }
-
-  private queryData(nodeType: string, resource: string): void {
-    this.rdfDataService.get(nodeType, resource).subscribe(result => {
-      console.log(result);
-
-      let nodeData = this.graphData["nodes"] as DataSet<Node>;
-      let edgeData = this.graphData["edges"] as DataSet<Edge>;
-
-      const visNodes: VisNode[] = result.nodes.filter(node => nodeData.get(node.id) == null).map(node => {
-        let color;
-        if (node.nodeType != 'Uri') {
-          color = {background: '#FF8800', border: '#FF8800'};
-        } else {
-          color = {background: '#2A9FD6', border: '#2A9FD6'};
-        }
-        return {
-          id: node.id,
-          label: node.label,
-          nodeType: node.nodeType,
-          color: color,
-          value: 1
-        };
-      });
-
-      console.log(edgeData.get([result.edges[0].from, result.edges[0].to]).filter(r => r != null));
-
-      const edges = result.edges.filter(edge => edgeData.get(edge.id) == null);
-
-      nodeData.add(visNodes);
-      edgeData.add(edges);
-
-      this.weightNodes();
-    });
   }
 
   private createOptions(): Options {
@@ -132,31 +104,6 @@ export class RdfGraphComponent implements OnInit {
       width: (window.innerWidth - 0) + "px",
       height: (window.innerHeight - 0) + "px"
     };
-  }
-
-  private weightNodes(): void {
-
-    let nodeData = this.graphData["nodes"] as DataSet<Node>;
-    let edgeData = this.graphData["edges"] as DataSet<Edge>;
-
-    nodeData.forEach(node => {
-      node.value = 0;
-    });
-
-    edgeData.forEach(edge => {
-      const nodeFrom = nodeData.get(edge.from);
-      if (nodeFrom != null) {
-        nodeFrom.value++;
-        nodeData.update(nodeFrom);
-      }
-      const nodeTo = nodeData.get(edge.to);
-      if (nodeTo != null) {
-        nodeTo.value++;
-        nodeData.update(nodeTo);
-      }
-
-    });
-
   }
 
 }

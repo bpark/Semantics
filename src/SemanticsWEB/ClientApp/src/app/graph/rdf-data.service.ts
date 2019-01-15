@@ -11,7 +11,7 @@ export class RdfDataService {
   constructor(private http: HttpClient) { }
 
   get(nodeType: string, resource: string): Observable<DataModel> {
-    return this.http.get<DataModel>(RdfDataService.createConnectionUrl(nodeType, resource));
+    return this.http.get<DataModel>(RdfDataService.createConnectionUrl(nodeType, resource))
   }
 
   private static createConnectionUrl(nodeType: string, resource: string): string {
