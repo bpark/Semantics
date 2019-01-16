@@ -57,7 +57,6 @@ export class RdfGraphComponent implements OnInit {
             if (node.id === selectedId) {
               let visNode = node as VisNode;
               subject.next(visNode);
-              //subject.complete();
             }
           });
         });
