@@ -18,10 +18,9 @@ namespace SemanticsWEB.Controllers
             _sesameRepository = sesameRepository;
         }
         
-        [HttpGet()]
+        [HttpGet]
         public IActionResult QueryCurrencies()
         {
-            _logger.LogInformation("i was here");
             return Ok(_sesameRepository.QueryResource(NodeType.Uri, "permid:1-1003939166"));
         }
 
