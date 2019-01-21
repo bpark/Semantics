@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Prometheus.Client.AspNetCore;
+using Prometheus.Client.HttpRequestDurations;
 using SemanticsWEB.Repositories;
 using Serilog;
 
@@ -54,6 +56,9 @@ namespace SemanticsWEB
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            
+            app.UsePrometheusServer();
+            app.UsePrometheusRequestDurations(); 
 
             app.UseMvc(routes =>
             {
