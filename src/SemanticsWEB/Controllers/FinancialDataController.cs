@@ -8,6 +8,7 @@ namespace SemanticsWEB.Controllers
     [Route("api/financial")]
     public class FinancialDataController : Controller
     {
+        private const string DefaultResource = "permid:1-1003939166";
 
         private readonly ILogger<FinancialDataController> _logger;
         private readonly ISesameRepository _sesameRepository;
@@ -21,7 +22,7 @@ namespace SemanticsWEB.Controllers
         [HttpGet]
         public IActionResult QueryCurrencies()
         {
-            return Ok(_sesameRepository.QueryResource(NodeType.Uri, "permid:1-1003939166"));
+            return Ok(_sesameRepository.QueryResource(NodeType.Uri, DefaultResource));
         }
 
         [HttpGet("resource")]
