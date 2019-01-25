@@ -56,9 +56,9 @@ namespace SemanticsWEB
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            
+
             app.UsePrometheusServer();
-            app.UsePrometheusRequestDurations(); 
+            app.UsePrometheusRequestDurations();
 
             app.UseMvc(routes =>
             {

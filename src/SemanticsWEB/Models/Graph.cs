@@ -23,7 +23,7 @@ namespace SemanticsWEB.Models
 
         public string Id { get; }
         public string Label { get; }
-        
+
         public NodeType NodeType { get; }
     }
 
@@ -52,7 +52,7 @@ namespace SemanticsWEB.Models
         public string To { get; }
         public string Label { get; }
     }
-    
+
     public class Graph
     {
         /// <summary>

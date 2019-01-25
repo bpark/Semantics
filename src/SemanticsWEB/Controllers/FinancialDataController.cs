@@ -18,7 +18,7 @@ namespace SemanticsWEB.Controllers
             _logger = logger;
             _sesameRepository = sesameRepository;
         }
-        
+
         [HttpGet]
         public IActionResult QueryCurrencies()
         {
