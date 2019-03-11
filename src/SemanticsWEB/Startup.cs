@@ -7,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Prometheus.Client.AspNetCore;
 using Prometheus.Client.HttpRequestDurations;
+using SemanticsWEB.Handlers;
 using SemanticsWEB.Repositories;
+using SemanticsWEB.Utils;
 using Serilog;
 
 namespace SemanticsWEB
@@ -37,6 +39,9 @@ namespace SemanticsWEB
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
             services.AddTransient<IDbPediaRepository, DbPediaRepository>();
             services.AddTransient<ISesameRepository, SesameRepository>();
+            services.AddTransient<ISesameRepository, SesameRepository>();
+            services.AddSingleton<ResourceQueryHandler>();
+            //services.AddHandlers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
