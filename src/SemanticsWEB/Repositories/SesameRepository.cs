@@ -23,7 +23,7 @@ namespace SemanticsWEB.Repositories
         /// <summary>
         /// The repository to query.
         /// </summary>
-        private const string RepositoryId = "currencies";
+        private const string RepositoryId = "geocurrencies";
 
         private readonly ILogger<SesameRepository> _logger;
 
@@ -41,7 +41,8 @@ namespace SemanticsWEB.Repositories
             {"skos", "http://www.w3.org/2004/02/skos/core#"},
             {"xsd", "http://www.w3.org/2001/XMLSchema#"},
             {"owl", "http://www.w3.org/2002/07/owl#"},
-            {"permid", "https://permid.org/"}
+            {"permid", "https://permid.org/"},
+            {"gn", "http://www.geonames.org/ontology#"}
         };
 
         /// <summary>
@@ -51,9 +52,12 @@ namespace SemanticsWEB.Repositories
             @"SELECT ?subject ?predicate ?object
               WHERE {
                  ?subject ?predicate ?object
-                 FILTER (?subject = @value || ?predicate = @value || ?object = @value)
+                 FILTER (?subject = @value || ?predicate = @value || ?object = @value) .
+                 FILTER (langMatches(lang(?object), """") || langMatches(lang(?object), ""EN"") || ISURI(?object))
               }
               LIMIT 50";
+
+        //                  FILTER (langMatches(lang(?object), "") || langMatches(lang(?object), "EN")) 
 
         public SesameRepository(ILogger<SesameRepository> logger)
         {
@@ -193,7 +197,8 @@ namespace SemanticsWEB.Repositories
 
         private static NodeType EvaluateNodeType(string value)
         {
-            if (value.StartsWith("http://") || value.StartsWith("https://"))
+            if (value.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || 
+                value.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
                 return NodeType.Uri;
             }
@@ -202,5 +207,6 @@ namespace SemanticsWEB.Repositories
                 return NodeType.Literal;
             }
         }
+
     }
 }
